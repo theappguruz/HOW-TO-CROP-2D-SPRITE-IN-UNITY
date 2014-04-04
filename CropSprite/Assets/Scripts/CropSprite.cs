@@ -1,6 +1,5 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
-using UnityEditor;
 
 public class CropSprite : MonoBehaviour 
 {
@@ -85,19 +84,18 @@ public class CropSprite : MonoBehaviour
 		Sprite spriteToCropSprite = spriteRenderer.sprite;
 		Texture2D spriteTexture = spriteToCropSprite.texture;
 		Rect spriteRect = spriteToCrop.GetComponent<SpriteRenderer>().sprite.textureRect;
-		
-		string path = AssetDatabase.GetAssetPath(spriteTexture);
-		TextureImporter importer = (TextureImporter)TextureImporter.GetAtPath(path);
+
+		int pixelsToUnits = 100; // It's PixelsToUnits of sprite which would be cropped
 
 //		Crop sprite
 
 		GameObject croppedSpriteObj = new GameObject("CroppedSprite");
 		Rect croppedSpriteRect = spriteRect;
-		croppedSpriteRect.width = (Mathf.Abs(bottomRightPoint.x - topLeftPoint.x)*importer.spritePixelsToUnits)* (1/spriteToCrop.transform.localScale.x);
-		croppedSpriteRect.x = (Mathf.Abs(topLeftPoint.x - (spriteRenderer.bounds.center.x-spriteRenderer.bounds.size.x/2)) *importer.spritePixelsToUnits)* (1/spriteToCrop.transform.localScale.x);
-		croppedSpriteRect.height = (Mathf.Abs(bottomRightPoint.y - topLeftPoint.y)*importer.spritePixelsToUnits)* (1/spriteToCrop.transform.localScale.y);
-		croppedSpriteRect.y = ((topLeftPoint.y - (spriteRenderer.bounds.center.y - spriteRenderer.bounds.size.y/2))*(1/spriteToCrop.transform.localScale.y))* importer.spritePixelsToUnits - croppedSpriteRect.height;//*(spriteToCrop.transform.localScale.y);
-		Sprite croppedSprite = Sprite.Create(spriteTexture, croppedSpriteRect, new Vector2(0,1), importer.spritePixelsToUnits);
+		croppedSpriteRect.width = (Mathf.Abs(bottomRightPoint.x - topLeftPoint.x)*pixelsToUnits)* (1/spriteToCrop.transform.localScale.x);
+		croppedSpriteRect.x = (Mathf.Abs(topLeftPoint.x - (spriteRenderer.bounds.center.x-spriteRenderer.bounds.size.x/2)) *pixelsToUnits)* (1/spriteToCrop.transform.localScale.x);
+		croppedSpriteRect.height = (Mathf.Abs(bottomRightPoint.y - topLeftPoint.y)*pixelsToUnits)* (1/spriteToCrop.transform.localScale.y);
+		croppedSpriteRect.y = ((topLeftPoint.y - (spriteRenderer.bounds.center.y - spriteRenderer.bounds.size.y/2))*(1/spriteToCrop.transform.localScale.y))* pixelsToUnits - croppedSpriteRect.height;//*(spriteToCrop.transform.localScale.y);
+		Sprite croppedSprite = Sprite.Create(spriteTexture, croppedSpriteRect, new Vector2(0,1), pixelsToUnits);
 		SpriteRenderer cropSpriteRenderer = croppedSpriteObj.AddComponent<SpriteRenderer>();	
 		cropSpriteRenderer.sprite = croppedSprite;
 		topLeftPoint.z = -1;
